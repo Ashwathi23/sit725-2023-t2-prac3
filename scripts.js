@@ -1,4 +1,4 @@
-const cardList = [{
+/*const cardList = [{
     title: ' The Magician ',
     path: 'images/The magician.webp',
     subTitle: 'Click the Magician card to know more',
@@ -15,7 +15,7 @@ const cardList = [{
     path: 'images/The tower card.webp',
     subTitle: 'Click the Tower card to know more',
     description: 'If we had to redesign the Tower card to a more modern-day representation, a crashing airplane would be an accurate alternative image.The Tower signifies total destruction. If you’ve received the Upright Tower tarot card, prepare for things to be leveled and dismantled.As with all losses, this will probably be a painful process. It can also lead to a fresh start. Before you are able to make these positive changes, you’ll have first to face the truth about a situation.'
-}];
+}];*/
 
 const addCards = (items) => {
     items.forEach(item => {
@@ -33,12 +33,34 @@ const addCards = (items) => {
 
 const formSumitted = () => {
     let formData = {};
-    formData.firstName = $('#first_name').val();
-    formData.lastName = $('#last_name').val();
-    formData.password = $('#password').val();
-    formData.email = $('#email').val();
+    formData.title = $('#title').val();
+    formData.path = $('#path').val();
+    formData.subTitle = $('#subTitle').val();
+    formData.description = $('#description').val();
 
     console.log(formData);
+    postCat(formData);
+}
+
+function postCat(cat) {
+    $.ajax({
+        url:'/api/cat',
+        type:'POST',
+        data:cat,
+        success: (result) => {
+            if (result.statusCode === 201) {
+                alert('Card is added');
+            }
+        }
+    });
+}
+
+function getAllCats() {
+    $.get('/api/cats',(result)=>{
+        if (result.statusCode === 200) {
+            addCards(result.data);
+        }
+    });
 }
 
 $(document).ready(function(){
@@ -46,6 +68,6 @@ $(document).ready(function(){
     $('#formSubmit').click(()=>{
         formSumitted();
     });
-    addCards(cardList);
     $('.modal').modal();
+    getAllCats();
 });
